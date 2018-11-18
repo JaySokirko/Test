@@ -16,16 +16,4 @@ public class Images {
     public void setImage170x135(String image170x135) {
         this.image170x135 = image170x135;
     }
-
-
-    @SerializedName("url_570xN")
-    private String image570xN;
-
-    public String getImage570xN() {
-        return image570xN;
-    }
-
-    public void setImage570xN(String image570xN) {
-        this.image570xN = image570xN;
-    }
 }

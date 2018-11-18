@@ -9,6 +9,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -32,10 +33,9 @@ public class FoundProductsActivity extends AppCompatActivity implements SwipeRef
 
 
     private ArrayList<String> titlesList = new ArrayList<>();
-    private ArrayList<String> images_170X135_list = new ArrayList<>();
+    private ArrayList<String> imagesList = new ArrayList<>();
 
     //These arrays will be used to transfer data to detailed activity.
-    private ArrayList<String> images_570xN_list = new ArrayList<>();
     private ArrayList<String> descriptionsList = new ArrayList<>();
     private ArrayList<String> pricesList = new ArrayList<>();
     private ArrayList<String> currenciesCodesList = new ArrayList<>();
@@ -83,7 +83,7 @@ public class FoundProductsActivity extends AppCompatActivity implements SwipeRef
         }
 
         adapter = new ProductsAdapter(FoundProductsActivity.this, titlesList,
-                images_170X135_list, FoundProductsActivity.this);
+                imagesList, FoundProductsActivity.this);
         recyclerView.setAdapter(adapter);
 
         //Update the data in the adapter when the download is complete
@@ -133,9 +133,7 @@ public class FoundProductsActivity extends AppCompatActivity implements SwipeRef
                                 .replaceAll("&lt;", "<")
                                 .replaceAll("&gt;", ">"));
 
-                        images_170X135_list.add(products.getImages().get(0).getImage170x135());
-
-                        images_570xN_list.add(products.getImages().get(0).getImage570xN());
+                        imagesList.add(products.getImages().get(0).getImage170x135());
 
                         descriptionsList.add(products.getDescription()
                                 .replaceAll("&#39;", "\'")
@@ -190,10 +188,10 @@ public class FoundProductsActivity extends AppCompatActivity implements SwipeRef
         //just go to the next page.
         pageIndex++;
 
-        if (!titlesList.isEmpty() && !images_170X135_list.isEmpty()) {
+        if (!titlesList.isEmpty() && !imagesList.isEmpty()) {
 
             titlesList.clear();
-            images_170X135_list.clear();
+            imagesList.clear();
         }
 
         loadProducts();
@@ -218,7 +216,7 @@ public class FoundProductsActivity extends AppCompatActivity implements SwipeRef
     public void onItemClick(int position) {
 
         startActivity(new Intent(FoundProductsActivity.this, DetailedScreenActivity.class)
-                .putExtra("image", images_570xN_list.get(position))
+                .putExtra("image", imagesList.get(position))
                 .putExtra("description", descriptionsList.get(position))
                 .putExtra("title", titlesList.get(position))
                 .putExtra("price", pricesList.get(position))

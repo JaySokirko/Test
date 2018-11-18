@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -54,6 +55,8 @@ public class DetailedScreenActivity extends AppCompatActivity implements View.On
 
         image = getIntent().getStringExtra("image");
         title = getIntent().getStringExtra("title");
+
+        Log.d("TAG_LOG", "onCreate: " + title);
 
         description = getIntent().getStringExtra("description");
 
