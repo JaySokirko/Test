@@ -2,7 +2,6 @@ package com.jay.test.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.jay.test.model.Images;
 
 import java.util.List;
 
