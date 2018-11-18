@@ -18,6 +18,7 @@ import com.jay.test.model.http.Api;
 import com.jay.test.model.http.ApiClient;
 import com.jay.test.model.http.Product;
 import com.jay.test.model.http.Products;
+import com.jay.test.observer.LoadDataListener;
 import com.jay.test.utils.InternetConnection;
 import com.jay.test.view.dialog.NoInternetConnectionDialog;
 
@@ -48,6 +49,8 @@ public class FoundProductsActivity extends AppCompatActivity implements SwipeRef
     private ProgressBar bottomProgressBar;
     private ProgressBar centerProgressBar;
 
+    private LoadDataListener loadDataListener;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,15 +69,29 @@ public class FoundProductsActivity extends AppCompatActivity implements SwipeRef
         //get a category in which to look for products
         category = getIntent().getStringExtra("category");
 
-        setSwipeRefreshLayout();
+        loadDataListener = new LoadDataListener();
 
-        loadProducts();
+        //Check if there is an internet connection.
+        if (InternetConnection.isOnline(FoundProductsActivity.this)) {
 
-        onPaginationListener();
+            loadProducts();
+        } else {
+
+            NoInternetConnectionDialog.buildDialog(FoundProductsActivity.this);
+            bottomProgressBar.setVisibility(View.GONE);
+            centerProgressBar.setVisibility(View.GONE);
+        }
 
         adapter = new ProductsAdapter(FoundProductsActivity.this, titlesList,
                 images_170X135_list, FoundProductsActivity.this);
         recyclerView.setAdapter(adapter);
+
+        //Update the data in the adapter when the download is complete
+        onDataLoadListener();
+
+        onPaginationListener();
+
+        setSwipeRefreshLayout();
 
     }
 
@@ -100,63 +117,50 @@ public class FoundProductsActivity extends AppCompatActivity implements SwipeRef
         String url = "listings/active?includes=Images&category=";
         String address = url + category + "&page=" + page + apiKey;
 
-        if (InternetConnection.isOnline(FoundProductsActivity.this)) {
 
-            apiService.getProducts(address).enqueue(new Callback<Products>() {
+        apiService.getProducts(address).enqueue(new Callback<Products>() {
 
-                @Override
-                public void onResponse(@NonNull Call<Products> call, @NonNull Response<Products> response) {
+            @Override
+            public void onResponse(@NonNull Call<Products> call, @NonNull Response<Products> response) {
 
-                    if (response.body() != null) {
+                if (response.body() != null) {
 
-                        for (Product products : response.body().getProductResults()) {
+                    for (Product products : response.body().getProductResults()) {
 
-                            titlesList.add(products.getTitle()
-                                    .replaceAll("&#39;","\'")
-                                    .replaceAll("&quot;","\"")
-                                    .replaceAll("&lt;","<")
-                                    .replaceAll("&gt;",">"));
+                        titlesList.add(products.getTitle()
+                                .replaceAll("&#39;", "\'")
+                                .replaceAll("&quot;", "\"")
+                                .replaceAll("&lt;", "<")
+                                .replaceAll("&gt;", ">"));
 
-                            images_170X135_list.add(products.getImages().get(0).getImage170x135());
+                        images_170X135_list.add(products.getImages().get(0).getImage170x135());
 
-                            images_570xN_list.add(products.getImages().get(0).getImage570xN());
+                        images_570xN_list.add(products.getImages().get(0).getImage570xN());
 
-                            descriptionsList.add(products.getDescription()
-                                    .replaceAll("&#39;","\'")
-                                    .replaceAll("&quot;","\"")
-                                    .replaceAll("&lt;","<")
-                                    .replaceAll("&gt;",">"));
+                        descriptionsList.add(products.getDescription()
+                                .replaceAll("&#39;", "\'")
+                                .replaceAll("&quot;", "\"")
+                                .replaceAll("&lt;", "<")
+                                .replaceAll("&gt;", ">"));
 
-                            pricesList.add(products.getPrice());
+                        pricesList.add(products.getPrice());
 
-                            currenciesCodesList.add(products.getCurrencyCode());
-                        }
+                        currenciesCodesList.add(products.getCurrencyCode());
                     }
-
-                    adapter.notifyDataSetChanged();
-
-                    bottomProgressBar.setVisibility(View.GONE);
-                    centerProgressBar.setVisibility(View.GONE);
-
-                    refreshLayout.setRefreshing(false);
                 }
+                loadDataListener.setDataLoaded(true);
+            }
 
-                @Override
-                public void onFailure(@NonNull Call<Products> call, @NonNull Throwable t) {
+            @Override
+            public void onFailure(@NonNull Call<Products> call, @NonNull Throwable t) {
 
-                    bottomProgressBar.setVisibility(View.GONE);
-                    centerProgressBar.setVisibility(View.GONE);
+                bottomProgressBar.setVisibility(View.GONE);
+                centerProgressBar.setVisibility(View.GONE);
 
-                    Snackbar.make(refreshLayout, getResources().getString(R.string.fail_to_load),
-                            BaseTransientBottomBar.LENGTH_SHORT);
-                }
-            });
-
-        } else {
-            NoInternetConnectionDialog.buildDialog(FoundProductsActivity.this);
-            bottomProgressBar.setVisibility(View.GONE);
-            centerProgressBar.setVisibility(View.GONE);
-        }
+                Snackbar.make(refreshLayout, getResources().getString(R.string.fail_to_load),
+                        BaseTransientBottomBar.LENGTH_SHORT);
+            }
+        });
     }
 
 
@@ -193,6 +197,20 @@ public class FoundProductsActivity extends AppCompatActivity implements SwipeRef
         }
 
         loadProducts();
+    }
+
+
+    private void onDataLoadListener() {
+
+        loadDataListener.setListener(() -> {
+
+            refreshLayout.setRefreshing(false);
+
+            adapter.notifyDataSetChanged();
+
+            bottomProgressBar.setVisibility(View.GONE);
+            centerProgressBar.setVisibility(View.GONE);
+        });
     }
 
 

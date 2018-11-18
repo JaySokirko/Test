@@ -23,6 +23,7 @@ import com.jay.test.model.http.Api;
 import com.jay.test.model.http.ApiClient;
 import com.jay.test.model.http.Categories;
 import com.jay.test.model.http.Category;
+import com.jay.test.observer.LoadDataListener;
 import com.jay.test.utils.InternetConnection;
 import com.jay.test.view.activity.FoundProductsActivity;
 import com.jay.test.view.dialog.NoInternetConnectionDialog;
@@ -35,6 +36,7 @@ import retrofit2.Response;
 
 public class SearchCategoriesFragment extends Fragment {
 
+
     private ListView categoriesListView;
     private EditText searchEditText;
     private FrameLayout parentLayout;
@@ -45,6 +47,8 @@ public class SearchCategoriesFragment extends Fragment {
     private ArrayAdapter<String> adapter;
 
     private Context context;
+
+    private LoadDataListener loadDataListener;
 
 
     @Override
@@ -65,14 +69,13 @@ public class SearchCategoriesFragment extends Fragment {
         parentLayout = rootView.findViewById(R.id.parent_layout);
         progressBar = rootView.findViewById(R.id.progress_bar);
 
-        adapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, categoriesList);
+        loadDataListener = new LoadDataListener();
 
+        adapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, categoriesList);
 
         onEditTextChangeListener();
 
-
         onCategorySelectListener();
-
 
         categoriesListView.setAdapter(adapter);
 
@@ -85,7 +88,18 @@ public class SearchCategoriesFragment extends Fragment {
         super.onResume();
 
         progressBar.setVisibility(View.VISIBLE);
-        loadData();
+
+        //Check if there is an internet connection.
+        if (InternetConnection.isOnline(context)) {
+
+            loadData();
+        } else {
+            NoInternetConnectionDialog.buildDialog(context);
+            progressBar.setVisibility(View.GONE);
+        }
+
+        //Update the data in the adapter when the download is complete
+        onDataLoadListener();
     }
 
 
@@ -93,8 +107,6 @@ public class SearchCategoriesFragment extends Fragment {
 
         Api apiService =
                 ApiClient.getClient().create(Api.class);
-
-        if (InternetConnection.isOnline(context)){
 
             apiService.getCategories().enqueue(new Callback<Categories>() {
                 @Override
@@ -106,10 +118,8 @@ public class SearchCategoriesFragment extends Fragment {
                             categoriesList.add(results.getName().replaceAll("_"," "));
                         }
                     }
-
-                    adapter.notifyDataSetChanged();
-
-                    progressBar.setVisibility(View.GONE);
+                    //Notify when download is complete
+                    loadDataListener.setDataLoaded(true);
                 }
 
                 @Override
@@ -121,13 +131,6 @@ public class SearchCategoriesFragment extends Fragment {
                     progressBar.setVisibility(View.GONE);
                 }
             });
-
-        } else {
-
-          NoInternetConnectionDialog.buildDialog(getActivity());
-          progressBar.setVisibility(View.INVISIBLE);
-
-        }
     }
 
 
@@ -139,6 +142,7 @@ public class SearchCategoriesFragment extends Fragment {
             String category = (String) categoriesListView.getItemAtPosition(position);
             category = category.replaceAll(" ","_");
 
+            //Pass selected category to FoundProductsActivity
             startActivity(new Intent(getContext(), FoundProductsActivity.class)
                     .putExtra("category",category));
 
@@ -155,11 +159,24 @@ public class SearchCategoriesFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                //Filter the list by typing characters
                 adapter.getFilter().filter(s);
             }
 
             @Override
             public void afterTextChanged(Editable s) {}
+        });
+    }
+
+
+
+    private void onDataLoadListener(){
+
+        loadDataListener.setListener(() -> {
+
+            adapter.notifyDataSetChanged();
+
+            progressBar.setVisibility(View.GONE);
         });
     }
 }
