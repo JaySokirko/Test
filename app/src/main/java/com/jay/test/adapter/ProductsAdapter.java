@@ -1,4 +1,4 @@
-package com.jay.test.model.adapter;
+package com.jay.test.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

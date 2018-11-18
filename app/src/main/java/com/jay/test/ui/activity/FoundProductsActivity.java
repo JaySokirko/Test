@@ -1,4 +1,4 @@
-package com.jay.test.view.activity;
+package com.jay.test.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,14 +13,14 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.jay.test.R;
-import com.jay.test.model.adapter.ProductsAdapter;
-import com.jay.test.model.http.Api;
-import com.jay.test.model.http.ApiClient;
-import com.jay.test.model.http.Product;
-import com.jay.test.model.http.Products;
+import com.jay.test.adapter.ProductsAdapter;
+import com.jay.test.network.Api;
+import com.jay.test.network.ApiClient;
+import com.jay.test.model.Product;
+import com.jay.test.model.Products;
 import com.jay.test.observer.LoadDataListener;
 import com.jay.test.utils.InternetConnection;
-import com.jay.test.view.dialog.NoInternetConnectionDialog;
+import com.jay.test.ui.dialog.NoInternetConnectionDialog;
 
 import java.util.ArrayList;
 

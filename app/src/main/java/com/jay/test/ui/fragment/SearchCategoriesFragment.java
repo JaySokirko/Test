@@ -1,4 +1,4 @@
-package com.jay.test.view.fragment;
+package com.jay.test.ui.fragment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,14 +19,14 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.jay.test.R;
-import com.jay.test.model.http.Api;
-import com.jay.test.model.http.ApiClient;
-import com.jay.test.model.http.Categories;
-import com.jay.test.model.http.Category;
+import com.jay.test.network.Api;
+import com.jay.test.network.ApiClient;
+import com.jay.test.model.Categories;
+import com.jay.test.model.Category;
 import com.jay.test.observer.LoadDataListener;
 import com.jay.test.utils.InternetConnection;
-import com.jay.test.view.activity.FoundProductsActivity;
-import com.jay.test.view.dialog.NoInternetConnectionDialog;
+import com.jay.test.ui.activity.FoundProductsActivity;
+import com.jay.test.ui.dialog.NoInternetConnectionDialog;
 
 import java.util.ArrayList;
 

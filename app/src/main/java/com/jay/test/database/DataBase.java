@@ -1,4 +1,4 @@
-package com.jay.test.model.database;
+package com.jay.test.database;
 
 import android.content.ContentValues;
 import android.content.Context;

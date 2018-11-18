@@ -1,4 +1,4 @@
-package com.jay.test.view.dialog;
+package com.jay.test.ui.dialog;
 
 import android.content.Context;
 import android.content.Intent;

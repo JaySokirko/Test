@@ -1,4 +1,4 @@
-package com.jay.test.view.fragment;
+package com.jay.test.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,9 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.jay.test.R;
-import com.jay.test.model.adapter.ProductsAdapter;
-import com.jay.test.model.database.DataBase;
-import com.jay.test.view.activity.DetailedScreenActivity;
+import com.jay.test.adapter.ProductsAdapter;
+import com.jay.test.database.DataBase;
+import com.jay.test.ui.activity.DetailedScreenActivity;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package com.jay.test.view.activity;
+package com.jay.test.ui.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,11 +8,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import com.jay.test.R;
-import com.jay.test.view.fragment.SavedProductFragment;
-import com.jay.test.view.fragment.SearchCategoriesFragment;
+import com.jay.test.ui.fragment.SavedProductFragment;
+import com.jay.test.ui.fragment.SearchCategoriesFragment;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -1,4 +1,7 @@
-package com.jay.test.model.http;
+package com.jay.test.network;
+
+import com.jay.test.model.Categories;
+import com.jay.test.model.Products;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

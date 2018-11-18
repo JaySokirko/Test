@@ -1,4 +1,4 @@
-package com.jay.test.view.activity;
+package com.jay.test.ui.activity;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jay.test.R;
-import com.jay.test.model.database.DataBase;
+import com.jay.test.database.DataBase;
 import com.squareup.picasso.Picasso;
 
 public class DetailedScreenActivity extends AppCompatActivity implements View.OnClickListener {

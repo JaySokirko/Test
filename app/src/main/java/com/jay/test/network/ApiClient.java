@@ -1,4 +1,4 @@
-package com.jay.test.model.http;
+package com.jay.test.network;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
