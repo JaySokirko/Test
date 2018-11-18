@@ -56,8 +56,6 @@ public class DetailedScreenActivity extends AppCompatActivity implements View.On
         image = getIntent().getStringExtra("image");
         title = getIntent().getStringExtra("title");
 
-        Log.d("TAG_LOG", "onCreate: " + title);
-
         description = getIntent().getStringExtra("description");
 
         price = getIntent().getStringExtra("price");
